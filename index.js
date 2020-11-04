@@ -1,3 +1,8 @@
+//Define a function to get grades from an array of ojbects
+    var getGrade = function(object){
+        return object.grade;
+    }
+
 //Create a table
 var drawTable = function(d)
 {   
@@ -14,11 +19,6 @@ var drawTable = function(d)
         .attr("src", function(student){
         return "imgs/" + student.picture;
     })
-    
-    //Define a function to get grades from an array of ojbects
-    var getGrade = function(object){
-        return object.grade;
-    }
     
     //Create mean quiz column
     rows.append("td")
@@ -45,6 +45,72 @@ var drawTable = function(d)
     })
 };
 
+//Clear table
+var clearTable = function()
+{
+    d3.selectAll("#studentsTable tbody tr")
+        .remove();
+}
+
+//Sort table
+var sortTable = function(d)
+{
+    d3.select("#quiz")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return d3.mean(b.quizes.map(getGrade)) - d3.mean(a.quizes.map(getGrade));
+            })
+        clearTable();
+        drawTable(d);
+    })
+    
+    d3.select("#hw")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return d3.mean(b.homework.map(getGrade)) - d3.mean(a.homework.map(getGrade));
+            })
+        clearTable();
+        drawTable(d);
+    })
+    
+    d3.select("#hw")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return d3.mean(b.homework.map(getGrade)) - d3.mean(a.homework.map(getGrade));
+            })
+        clearTable();
+        drawTable(d);
+    })
+    
+    d3.select("#test")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return d3.mean(b.test.map(getGrade)) - d3.mean(a.test.map(getGrade));
+            })
+        clearTable();
+        drawTable(d);
+    })
+    
+    d3.select("#final")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return b.final[0].grade - a.final[0].grade;
+            })
+        clearTable();
+        drawTable(d);
+    })
+}
+
 
 //Retrieve data
 var studentPromise = d3.json("classData.json");
@@ -55,8 +121,11 @@ var successFun = function(d)
     //Print data
     console.log(d);
     
-    //Create a table
+    //Create table
     drawTable(d);
+    
+    //Sort table
+    sortTable(d);
 }
 
 //When data was found...
