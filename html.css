@@ -1,3 +1,29 @@
+body {
+    text-align: center;
+}
+
+table, th, td {
+    border: 2px solid #364f6b;
+}
+
+th {
+    padding: 10px 0;
+    background: #3fc1c9;
+    font-weight: 900;
+}
+
+table {
+    border-collapse: collapse;
+    width: 700px;
+    margin: 0 auto;
+    background-color: #f5f5f5;
+}
+
 img {
-    width: 70px;
+    height: 50px;
+    margin: 10px 0px;
+}
+
+.warning {
+    background-color: #fc5185;
 }

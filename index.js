@@ -1,7 +1,13 @@
-//Define a function to get grades from an array of ojbects
-    var getGrade = function(object){
-        return object.grade;
-    }
+
+//Define a function to get % grades from an array of ojbects
+var getGrade = function(object){
+    return (object.grade/object.max)*100;
+}
+    
+//Get total grade
+var getTotalGrade = function(student){
+    return (d3.mean(student.quizes.map(getGrade))*0.2 + d3.mean(student.homework.map(getGrade))*0.15 + d3.mean(student.test.map(getGrade))*0.3 + student.final[0].grade*0.35).toFixed(2);
+}
 
 //Create a table
 var drawTable = function(d)
@@ -23,26 +29,41 @@ var drawTable = function(d)
     //Create mean quiz column
     rows.append("td")
         .text(function(student){
-        return d3.mean(student.quizes.map(getGrade)).toFixed(2);
+        return d3.mean(student.quizes.map(getGrade)).toFixed(2) + "%";
     })
     
     //Create mean HW column
     rows.append("td")
         .text(function(student){
-        return d3.mean(student.homework.map(getGrade)).toFixed(2);
+        return d3.mean(student.homework.map(getGrade)).toFixed(2) + "%";
     })
     
     //Create mean Tests column
     rows.append("td")
         .text(function(student){
-        return d3.mean(student.test.map(getGrade)).toFixed(2);
+        return d3.mean(student.test.map(getGrade)).toFixed(2) + "%";
     })
     
     //Create final column
     rows.append("td")
         .text(function(student){
-        return student.final[0].grade;
+        return student.final[0].grade + "%";
     })
+    
+    //Create grade column
+    rows.append("td")
+        .text(getTotalGrade)
+        //Warning for low-grade students
+        .classed("warning", function(student){
+            if (getTotalGrade(student)<70)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        })
 };
 
 //Clear table
@@ -105,6 +126,17 @@ var sortTable = function(d)
             console.log("Clicked");
             d.sort(function(a, b){
                 return b.final[0].grade - a.final[0].grade;
+            })
+        clearTable();
+        drawTable(d);
+    })
+    
+    d3.select("#grade")
+    .on("click", function()
+        {
+            console.log("Clicked");
+            d.sort(function(a, b){
+                return getTotalGrade(b) - getTotalGrade(a);
             })
         clearTable();
         drawTable(d);
